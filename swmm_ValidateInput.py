@@ -77,8 +77,8 @@ def write_modifiedsubcatchments(pre_list, post_list, func_report):
     func_report.write('SUBCATCHMENTID, AREA(acres), DOWNSTREAM_CONNECTION, IMPERVIOUS(%), SLOPE(ft./ft.), WIDTH(ft.)\n')
     for i in pre_list:
         func_report.write("{}, {}, {}, {}, {}, {}\n".format(i.name, i.area, i.connection, i.percent_impervious*100, i.slope, i.width))
-    func_report.write('\nPOST DEVELOPED')
-    for i in pre_list:
+    func_report.write('\nPOST DEVELOPED\n')
+    for i in post_list:
         func_report.write("{}, {}, {}, {}, {}, {}\n".format(i.name, i.area, i.connection, i.percent_impervious*100, i.slope, i.width))
 
 if __name__ == "__main__":
@@ -104,10 +104,13 @@ if __name__ == "__main__":
     if pre_totarea < 0.99*post_totarea or pre_totarea > 1.01*post_totarea:
         highlight_report.write('TOTAL SUBCATCHMENT AREAS ARE NOT THE SAME\n')
         highlight_report.write('Pre Total Area:,{}\nPost Total Area:,{}\n'.format(pre_totarea, post_totarea))
-        
-    write_results(missing_old_Subcatchments, "predeveloped", highlight_report)
-    write_results(all_new_Subcatchments, "postdeveloped", highlight_report)
-    write_modifiedsubcatchments(modified_pre_subcatchments, modified_post_subcatchments, highlight_report)
+    
+    if len(missing_old_Subcatchments) > 0:
+        write_results(missing_old_Subcatchments, "predeveloped", highlight_report)
+    if len(all_new_Subcatchments) > 0:
+        write_results(all_new_Subcatchments, "postdeveloped", highlight_report)
+    if len(modified_pre_subcatchments) > 0:
+        write_modifiedsubcatchments(modified_pre_subcatchments, modified_post_subcatchments, highlight_report)
     
     # close the file
     highlight_report.close()
